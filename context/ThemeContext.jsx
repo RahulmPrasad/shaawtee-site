@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { isMidnightPath } from '@/lib/paths';
 
 const ThemeContext = createContext(null);
 const THEME_KEY = 'shaawtee_theme';
@@ -19,7 +20,7 @@ export function ThemeProvider({ children }) {
 
   // midnight shop is always night, regardless of saved preference
   useEffect(() => {
-    if (pathname === '/midnight') {
+    if (isMidnightPath(pathname)) {
       localStorage.setItem(THEME_KEY, 'night');
       setThemeState('night');
     }
@@ -27,7 +28,7 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     document.body.classList.toggle('night', theme === 'night');
-    document.body.dataset.page = pathname === '/midnight' ? 'midnight' : '';
+    document.body.dataset.page = isMidnightPath(pathname) ? 'midnight' : '';
   }, [theme, pathname]);
 
   const setTheme = useCallback((next) => {

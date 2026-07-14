@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
+import { normalizePathname } from '@/lib/paths';
 
 const CLOSE_DURATION = 0.7; // seconds — shutter falling shut (with a small settle at the end)
 const OPEN_DURATION = 0.85; // seconds — shutter rising open
@@ -25,7 +26,7 @@ const COPY = {
 
 export default function BulbToggle() {
   const { theme, setTheme } = useTheme();
-  const pathname = usePathname();
+  const pathname = normalizePathname(usePathname());
   const router = useRouter();
   const [pulling, setPulling] = useState(false);
   const [sparking, setSparking] = useState(false);

@@ -35,19 +35,13 @@ export default function ProductCard({ product, ctaLabel = 'SELECT SIZE →' }) {
       onMouseLeave={handleMouseLeave}
     >
       <Link href={`/product?id=${product.id}`} style={{ textDecoration: 'none', display: 'block', color: 'inherit' }}>
-        <div className="card-img sketch-box">
+        <div className="card-img sketch-box" style={product.id === 'main-character' ? { background: '#1a1614' } : undefined}>
           {product.soldOut ? (
             <div className="sold-out">SOLD OUT</div>
-          ) : product.badge ? (
+          ) : (
             <div className="new-drop" style={badgeStyle}>{product.badge}</div>
-          ) : null}
-          <div className="card-img-inner">
-            <img
-              src={product.images?.[0]}
-              alt={product.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
-          </div>
+          )}
+          <div className="card-img-inner" dangerouslySetInnerHTML={{ __html: product.visual }} />
         </div>
       </Link>
       <div className="card-info">

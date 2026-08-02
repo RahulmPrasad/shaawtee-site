@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useProducts } from '@/context/ProductsContext';
+import { nightOnlyProducts } from '@/lib/products';
 import { useCart } from '@/context/CartContext';
 
 export default function MidnightShopClient() {
-  const { nightOnlyProducts: products, loading } = useProducts();
+  const products = nightOnlyProducts();
   const { addItem } = useCart();
   const [selectedSizes, setSelectedSizes] = useState({});
   const [feedback, setFeedback] = useState({});
@@ -26,31 +26,16 @@ export default function MidnightShopClient() {
     setTimeout(() => setFeedback((f) => ({ ...f, [product.id]: null })), 1600);
   };
 
-  if (loading) {
-    return (
-      <section className="mn-product" id="mn-product">
-        <div className="mn-img-placeholder">
-          <span className="mn-moon">🌙</span>
-          <span className="mn-ph-text">LOADING...</span>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="mn-product" id="mn-product">
       {products.map((p) => (
         <div className="mn-card" key={p.id}>
           <div className="mn-img">
-            {p.images?.length ? (
-              <img src={p.images[0]} alt={p.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            ) : (
-              <div className="mn-img-placeholder">
-                <span className="mn-moon">🌙</span>
-                <span className="mn-ph-text">TEE PHOTO<br />AANE WALI HAI...</span>
-                <span className="mn-soon">— DROP SOON —</span>
-              </div>
-            )}
+            <div className="mn-img-placeholder">
+              <span className="mn-moon">🌙</span>
+              <span className="mn-ph-text">TEE PHOTO<br />AANE WALI HAI...</span>
+              <span className="mn-soon">— DROP SOON —</span>
+            </div>
           </div>
           <div className="mn-info">
             <div className="mn-badge">{p.badge}</div>

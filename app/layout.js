@@ -2,7 +2,6 @@ import './globals.css';
 import { ReactLenis } from 'lenis/react';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { CartProvider } from '@/context/CartContext';
-import { ProductsProvider } from '@/context/ProductsContext';
 import BulbToggle from '@/components/BulbToggle';
 
 export const metadata = {
@@ -24,12 +23,10 @@ export default function RootLayout({ children }) {
       <body>
         <ReactLenis root options={{ lerp: 0.1, anchors: true }} />
         <ThemeProvider>
-          <ProductsProvider>
-            <CartProvider>
-              {children}
-              <BulbToggle />
-            </CartProvider>
-          </ProductsProvider>
+          <CartProvider>
+            {children}
+            <BulbToggle />
+          </CartProvider>
         </ThemeProvider>
       </body>
     </html>

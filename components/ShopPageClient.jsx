@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import ProductCard from '@/components/ProductCard';
-import { useProducts } from '@/context/ProductsContext';
+import { visibleProducts } from '@/lib/products';
 
 const FILTER_GROUPS = [
   {
@@ -45,7 +45,7 @@ function matchesFilter(p, filter) {
 
 export default function ShopPageClient() {
   const [filter, setFilter] = useState('all');
-  const { visibleProducts: pool, loading } = useProducts();
+  const pool = useMemo(() => visibleProducts(), []);
 
   const counts = useMemo(
     () => ({
@@ -92,11 +92,7 @@ export default function ShopPageClient() {
         </aside>
 
         <div className="shop-grid" id="shop-grid">
-          {loading ? (
-            <div className="shop-empty">
-              <div className="cart-empty-msg">loading the drop...</div>
-            </div>
-          ) : filtered.length === 0 ? (
+          {filtered.length === 0 ? (
             <div className="shop-empty">
               <div className="cart-empty-msg">nothing here 💀</div>
               <button onClick={() => setFilter('all')} className="btn-secondary" style={{ marginTop: '16px' }}>

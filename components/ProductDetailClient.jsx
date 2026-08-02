@@ -3,14 +3,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { getProductById } from '@/lib/products';
+import { useProducts } from '@/context/ProductsContext';
 import { useCart } from '@/context/CartContext';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function ProductDetailClient() {
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
-  const product = useMemo(() => getProductById(id), [id]);
+  const { getProductById, loading } = useProducts();
+  const product = useMemo(() => getProductById(id), [id, getProductById]);
   const { theme } = useTheme();
   const { addItem } = useCart();
 
@@ -42,6 +43,16 @@ export default function ProductDetailClient() {
     }, 2500);
     return () => clearInterval(interval);
   }, [product]);
+
+  if (loading) {
+    return (
+      <section className="product-section">
+        <div className="cart-empty">
+          <div className="cart-empty-msg">loading the drop...</div>
+        </div>
+      </section>
+    );
+  }
 
   if (!product) {
     return (
@@ -96,21 +107,18 @@ export default function ProductDetailClient() {
       <div id="product-page">
         <div className="product-layout">
           <div className="product-img-section">
-            <div
-              className="product-img-area sketch-box"
-              style={product.id === 'main-character' ? { background: '#1a1614' } : undefined}
-            >
+            <div className="product-img-area sketch-box">
               {product.soldOut ? (
                 <div className="sold-out">SOLD OUT</div>
-              ) : (
+              ) : product.badge ? (
                 <div
                   className="new-drop"
                   style={product.badgeType === 'hot' ? { background: '#1a3cff', color: 'white' } : undefined}
                 >
                   {product.badge}
                 </div>
-              )}
-              {product.images ? (
+              ) : null}
+              {product.images?.length ? (
                 <div className="product-img-slider" id="main-product-img">
                   <div
                     className="product-img-strip"
@@ -123,17 +131,10 @@ export default function ProductDetailClient() {
                   </div>
                 </div>
               ) : (
-                <>
-                  <div
-                    className="product-img-inner"
-                    id="main-product-img"
-                    dangerouslySetInnerHTML={{ __html: product.visual }}
-                  />
-                  <div className="product-img-note">photo dropping soon</div>
-                </>
+                <div className="product-img-note">photo dropping soon</div>
               )}
             </div>
-            {product.images && (
+            {product.images?.length > 1 && (
               <div className="product-thumbnails">
                 {product.images.map((src, i) => (
                   <button
@@ -210,10 +211,12 @@ export default function ProductDetailClient() {
               {product.soldOut ? 'SOLD OUT 💀' : added ? 'ADDED TO BAG ✓' : 'ADD TO BAG +'}
             </button>
 
-            <div className="product-detail-list">
-              <div className="detail-list-title">THE DETAILS</div>
-              <ul>{product.details.map((d, i) => <li key={i}>{d}</li>)}</ul>
-            </div>
+            {product.details.length > 0 && (
+              <div className="product-detail-list">
+                <div className="detail-list-title">THE DETAILS</div>
+                <ul>{product.details.map((d, i) => <li key={i}>{d}</li>)}</ul>
+              </div>
+            )}
           </div>
         </div>
 

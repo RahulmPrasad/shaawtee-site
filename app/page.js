@@ -1,12 +1,9 @@
 import Link from 'next/link';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
-import ProductCard from '@/components/ProductCard';
 import Reveal from '@/components/Reveal';
 import DropAlertForm from '@/components/DropAlertForm';
-import { getProductById } from '@/lib/products';
-
-const currentDrop = ['cockroach-rising', 'main-character', 'no-cap-no-sleep'].map(getProductById);
+import CurrentDropGrid from '@/components/CurrentDropGrid';
 
 export default function HomePage() {
   return (
@@ -78,13 +75,7 @@ export default function HomePage() {
           <h2 className="section-title">Current Drop</h2>
           <div className="section-line" />
         </div>
-        <div className="products-grid">
-          {currentDrop.map((product, i) => (
-            <Reveal key={product.id} delay={i * 0.15}>
-              <ProductCard product={product} ctaLabel="ADD TO BAG +" />
-            </Reveal>
-          ))}
-        </div>
+        <CurrentDropGrid />
         <div style={{ textAlign: 'center', marginTop: '48px' }}>
           <Link href="/shop" className="btn-secondary">View all tees →</Link>
         </div>

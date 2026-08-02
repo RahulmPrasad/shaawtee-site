@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { findVariant } from '@/lib/shopify';
 
 const CartContext = createContext(null);
 const CART_KEY = 'shaawtee_cart';
@@ -25,6 +26,7 @@ export function CartProvider({ children }) {
 
   const addItem = useCallback((product, { size, color, qty = 1 }) => {
     const cartId = `${product.id}-${size}-${color.toLowerCase().replace(/\s+/g, '-')}`;
+    const variant = findVariant(product, { size, color });
     setCart((prev) => {
       const existing = prev.find((i) => i.cartId === cartId);
       if (existing) {
@@ -32,7 +34,17 @@ export function CartProvider({ children }) {
       }
       return [
         ...prev,
-        { cartId, id: product.id, name: product.name, price: product.price, meta: product.meta, size, color, qty },
+        {
+          cartId,
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          meta: product.meta,
+          variantId: variant?.id ?? null,
+          size,
+          color,
+          qty,
+        },
       ];
     });
   }, []);
